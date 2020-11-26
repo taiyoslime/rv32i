@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-`include "define.h"
+`include "define.vh"
 
 module execute(
     input clk,
@@ -12,7 +12,7 @@ module execute(
     input [31:0] rs1,
     input [31:0] rs2,
     input [31:0] imm,
-    output logic [31:0] pc_next
+    output logic [31:0] pc_next,
     output [31:0] alu_result
     );
 
@@ -33,9 +33,9 @@ module execute(
     );
 
     always @(*) begin
-        if (br_taken == `ENABLE`) begin
+        if (br_taken == `ENABLE) begin
             pc_next <= alucode != `ALU_JALR ? pc + imm : op1 + imm;
-        else begin
+        end else begin
             pc_next <= pc + 32'b100;
         end
     end

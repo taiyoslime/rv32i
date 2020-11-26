@@ -8,11 +8,11 @@ module write(
 	input logic [31:0] pc_next,
 	output logic [31:0] pc
     );
-	always @(negedge rest or posedge clk) begin
+	always @(negedge rst or posedge clk) begin
 		if (rst == '0) begin
-			pc <= 'h7ffc;
+			pc <= 'h08000;
 		end else begin
-			pc <= npc;
+			pc <= pc_next;
 		end
 	end
 endmodule

@@ -10,11 +10,11 @@ module data_mem(
 	input [16:0] addr_w, addr_r,
 	input [31:0] data_w,
 	output logic [31:0] data_r
-	)
+	);
 
-	logic [31:0] mem [0:h'7fff];
+	logic [31:0] mem [0:'h80000];
 
-	initial $readmemh(`DATA_MEM_FILE, mem, 'h0000, 'h5fff);
+	initial $readmemh(`DATA_MEM_FILE, mem);
 
 	always @(posedge clk) begin
 		if (is_load == `ENABLE) begin
@@ -81,3 +81,4 @@ module data_mem(
 		end
 
 	end
+endmodule

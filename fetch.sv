@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-`include "define.h"
+`include "define.vh"
 
 module fetch(
     input clk,
@@ -8,14 +8,13 @@ module fetch(
     input logic [31:0] pc,
     output logic [31:0] inst
     );
-
+    
+    logic [31:0] addr;
+    assign addr = {pc[31:2], 2'b0};
+    
     inst_mem inst_mem(
             .clk,
             .addr,
             .data(inst)
-        );
-
-    logic addr [31:0];
-    assign addr = pc << 2;
-
+     );
 endmodule

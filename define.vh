@@ -1,5 +1,5 @@
-`INST_MEM_FILE "TODO"
-`DATA_MEM_FILE "TODO"
+`define INST_MEM_FILE "TODO"
+`define DATA_MEM_FILE "TODO"
 
 `define ENABLE 1'b1
 `define DISABLE 1'b0

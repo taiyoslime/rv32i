@@ -4,12 +4,12 @@
 
 module inst_mem(
 	input clk,
-	input logic [4:0] addr
+	input logic [31:0] addr,
 	output logic [31:0] data
 	);
 
-	reg [4:0] addr_reg;
-	reg logic [31:0] mem [0:'h1000];
+	logic [31:0] addr_reg;
+	logic [31:0] mem [0:'h10000];
 
 	initial $readmemh(`INST_MEM_FILE, mem);
 
@@ -18,4 +18,4 @@ module inst_mem(
 	end
 	assign data = mem[addr_reg]; //TODO
 
-endmodule;
+endmodule
