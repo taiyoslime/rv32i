@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 `include "define.vh"
 
 module data_mem(
@@ -7,7 +5,7 @@ module data_mem(
 	input [5:0] alucode,
 	input is_load,
 	input is_store,
-	input [16:0] addr_w, addr_r,
+	input [31:0] addr_w, addr_r,
 	input [31:0] data_w,
 	output logic [31:0] data_r
 	);
