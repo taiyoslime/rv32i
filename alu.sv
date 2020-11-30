@@ -27,7 +27,7 @@ module alu(
         br_taken <= `DISABLE;
     end
     `ALU_SLTU: begin
-        alu_result <= $signed(op1) < $signed(op2);
+        alu_result <= op1 < op2;
         br_taken <= `DISABLE;
     end
     `ALU_XOR: begin

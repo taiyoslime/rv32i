@@ -6,10 +6,26 @@ module core(
     output uart_tx
     );
     
+    logic [5:0] pipeline_clk;
+    
+    initial begin
+        pipeline_clk <= 5'b10000;
+    end
+    
+    
+    always @(posedge clk or negedge rst) begin
+        if(!rst) begin
+            pipeline_clk <= 5'b10000;
+        end else begin
+            pipeline_clk <= pipeline_clk != 5'b10000 ? (pipeline_clk << 1) : 5'b00001;
+        end
+    end
+    
     logic [31:0] pc;
     logic [31:0] inst;
     
     fetch fetch(
+        .clk(pipeline_clk[0]),
         .*
     );
     
@@ -35,6 +51,7 @@ module core(
     logic is_halt;
     
     decoder decoder(
+        .clk(pipeline_clk[1]),
         .*
     );
     
@@ -43,6 +60,7 @@ module core(
     logic [31:0] alu_result;
     
     execute execute(
+        .clk(pipeline_clk[2]),
         .*
     );
     
@@ -54,10 +72,12 @@ module core(
     assign addr_r = alu_result;
     
     data_mem data_memt(
+        .clk(pipeline_clk[3]),
         .*
     );
     
     write write(
+        .clk(pipeline_clk[4]),
         .*
     );
     

@@ -15,7 +15,7 @@ module data_mem(
 	initial $readmemh(`DATA_MEM_FILE, mem);
 
 	always @(posedge clk) begin
-		if (is_load == `ENABLE) begin
+		if (is_store == `ENABLE) begin
 			case(alucode)
 				`ALU_SB: begin
 					case(addr_w[1:0])
@@ -37,7 +37,7 @@ module data_mem(
 				end
 			endcase
 		end
-		if (is_store == `ENABLE) begin
+		if (is_load == `ENABLE) begin
 			case(alucode)
 				`ALU_LB: begin
 					case (addr_w[1:0])

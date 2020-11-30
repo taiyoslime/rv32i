@@ -11,7 +11,7 @@ module execute(
     input [31:0] rs2,
     input [31:0] imm,
     output logic [31:0] pc_next,
-    output [31:0] alu_result
+    output logic [31:0] alu_result
     );
 
     logic [31:0] op1;
@@ -19,19 +19,20 @@ module execute(
 
     logic br_taken;
     //assign op1 = aluop1_type == `OP_TYPE_REG ? rs1 : aluop1_type == `OP_TYPE_IMM ? imm : aluop1_type == `OP_TYPE_PC ? pc : '0;
-    //assign op2 = aluop2_type == `OP_TYPE_REG ? rs2 : aluop1_type == `OP_TYPE_IMM ? imm : aluop1_type == `OP_TYPE_PC ? pc : '0;
-
-
+    //assign op2 = aluop2_type == `OP_TYPE_REG ? rs2 : aluop2_type == `OP_TYPE_IMM ? imm : aluop2_type == `OP_TYPE_PC ? pc : '0;
+    
+    logic [31:0] alu_result_rg;
+    
     alu alu(
         .alucode,
         .op1,
         .op2,
-        .alu_result,
+        .alu_result(alu_result_rg),
         .br_taken
     );
-    
    
-    always @(posedge clk) begin
+
+    always @(*) begin
         case(aluop1_type)
             `OP_TYPE_REG: op1 <= rs1;
             `OP_TYPE_IMM: op1 <= imm;
@@ -44,14 +45,15 @@ module execute(
         endcase
     end
     
-    always @(*) begin
+   always @(posedge clk) begin
+        alu_result <= alu_result_rg;
         if (br_taken == `ENABLE) begin
+            $display("br_taken");
             pc_next <= alucode != `ALU_JALR ? pc + imm : rs1 + imm;
         end else begin
             pc_next <= pc + 32'b100;
         end
-    
-    end
+   end
 
 endmodule
 

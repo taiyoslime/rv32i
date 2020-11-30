@@ -1,4 +1,4 @@
-`define INST_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/tests/IntRegImm/code.hex"
+`define INST_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/tests/LoadAndStore/code.hex"
 `define DATA_MEM_FILE "TODO"
 
 `define ENABLE 1'b1

@@ -1,6 +1,7 @@
 `include "define.vh"
 
 module decoder(
+    input clk,
     input [31:0] inst,
     output logic [4:0] rs1_src,
     output logic [4:0] rs2_src,
@@ -15,7 +16,7 @@ module decoder(
     output logic is_halt
     );
     
-    always @(*) begin
+   always @(posedge clk) begin
     
     case(inst[6:0])
         `OP_OP: begin
