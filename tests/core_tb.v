@@ -3,7 +3,7 @@ module core_tb;
     reg cpu_resetn;
     wire uart_tx;
 
-    parameter CYCLE = 100;
+    parameter CYCLE = 20;
 
     always #(CYCLE/2) sysclk = ~sysclk;
 
@@ -17,6 +17,5 @@ module core_tb;
         #10     sysclk     = 1'd0;
                 cpu_resetn    = 1'd0;
         #(CYCLE) cpu_resetn = 1'd1;
-        #(100000000000000) $finish;
     end
 endmodule

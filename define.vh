@@ -1,5 +1,5 @@
-`define INST_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/tests/LoadAndStore/code.hex"
-`define DATA_MEM_FILE "TODO"
+`define INST_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/Coremark/code.hex"
+`define DATA_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/Coremark/data.hex"
 
 `define ENABLE 1'b1
 `define DISABLE 1'b0
