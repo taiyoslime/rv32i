@@ -1,3 +1,5 @@
+`include "define.vh"
+
 module uart(
    // Outputs
    // uart_busy,   // High means UART is transmitting
@@ -5,9 +7,11 @@ module uart(
    // Inputs
    uart_wr_i,   // Raise to transmit byte
    uart_dat_i,  // 8-bit data
-   sys_clk_i,   // System clock, 100 MHz
+   sys_clk_i,   // System clock
    sys_rstn_i    // System reset
 );
+
+
 
   input uart_wr_i;
   input [7:0] uart_dat_i;
@@ -24,10 +28,8 @@ module uart(
   wire uart_busy = |bitcount[3:1];
   wire sending = |bitcount;
 
-  // sys_clk_i is 100MHz.  We want a 115200Hz clock
-
   reg [28:0] d;
-  wire [28:0] dInc = d[28] ? (115200) : (115200 - 30000000);
+  wire [28:0] dInc = d[28] ? (115200) : (115200 - `SYS_CLOCK_HZ);
   wire [28:0] dNxt = d + dInc;
   always @(posedge sys_clk_i or negedge sys_rstn_i) begin
     if (!sys_rstn_i) begin

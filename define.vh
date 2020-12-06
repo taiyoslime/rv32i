@@ -1,12 +1,14 @@
-`define INST_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
-`define DATA_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/data.hex"
-
+//`define INST_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
+//`define DATA_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/data.hex"
+`define INST_MEM_FILE "/Users/taiyoslime/Vagrant/ubuntu-20.04/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
+`define DATA_MEM_FILE "/Users/taiyoslime/Vagrant/ubuntu-20.04/b3exp/benchmarks/Coremark_for_Synthesis/data.hex"
 //`define INST_MEM_FILE "/home/denjo/デスクトップ/b3exp/benchmarks/Coremark/code.hex"
 //`define DATA_MEM_FILE "/home/denjo/デスクトップ/b3exp/benchmarks/Coremark/data.hex"
-
 //`define INST_MEM_FILE "/home/denjo/デスクトップ/b3exp/benchmarks/tests/Uart/code.hex"
 //`define DATA_MEM_FILE ""
 
+
+`define SYS_CLOCK_HZ 30000000
 
 `define ENABLE 1'b1
 `define DISABLE 1'b0
@@ -22,7 +24,6 @@
 `define OP_STORE    7'b0100011
 `define OP_LOAD 7'b0000011
 
-// ALU�R�[�h
 `define ALU_LUI   6'd0
 `define ALU_JAL   6'd1
 `define ALU_JALR  6'd2
@@ -58,15 +59,7 @@
 `define OP_TYPE_IMM  2'd2
 `define OP_TYPE_PC   2'd3
 
-// �p�C�v���C���X�e�[�W
-`define IF_STAGE 3'd0
-`define RR_STAGE 3'd1
-`define EX_STAGE 3'd2
-`define MA_STAGE 3'd3
-`define RW_STAGE 3'd4
 
-// address for hardware counter
 `define HARDWARE_COUNTER_ADDR 32'hffffff00
 
-// address for UART
 `define UART_ADDR 32'hf6fff070

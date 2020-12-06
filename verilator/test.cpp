@@ -3,11 +3,10 @@
 #include "Vcore.h"
 
 // Set the clock speed of your processor.
-static constexpr std::size_t clock_Hz = 100000000;
+static constexpr std::size_t clock_Hz = 30000000;
 // UART baudrate
 static constexpr std::size_t uart_Hz = 115200;
 // The number of CoreMark iterations is depend on clock speed.
-// Max: 30 seconds
 static constexpr std::size_t max_cycle = 120 * clock_Hz;
 
 std::size_t timer_ps = 0;

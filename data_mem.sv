@@ -6,7 +6,7 @@ module data_mem(
 	input logic is_load,
 	input logic is_store,
 	input logic [31:0] addr_w, addr_r,
-	
+
 	input [31:0] data_w,
 	output logic [31:0] data_r
 	);
@@ -15,7 +15,7 @@ module data_mem(
 
 	initial $readmemh(`DATA_MEM_FILE, mem);
 
-	always @(posedge clk) begin
+	always_ff @(posedge clk) begin
 		if (is_store == `ENABLE) begin
 			case(alucode)
 				`ALU_SB: begin
@@ -55,11 +55,11 @@ module data_mem(
 				end
 				`ALU_LBU: begin
 					case (addr_w[1:0])
-                        2'b00: data_r <= $unsigned(mem[addr_r >> 2][7:0]);
-                        2'b01: data_r <= $unsigned(mem[addr_r >> 2][15:8]);
-                        2'b10: data_r <= $unsigned(mem[addr_r >> 2][23:16]);
-                        2'b11: data_r <= $unsigned(mem[addr_r >> 2][31:24]);
-                        default: ;
+						2'b00: data_r <= $unsigned(mem[addr_r >> 2][7:0]);
+						2'b01: data_r <= $unsigned(mem[addr_r >> 2][15:8]);
+						2'b10: data_r <= $unsigned(mem[addr_r >> 2][23:16]);
+						2'b11: data_r <= $unsigned(mem[addr_r >> 2][31:24]);
+						default: ;
 					endcase
 				end
 				`ALU_LH: begin
@@ -74,10 +74,10 @@ module data_mem(
 
 				`ALU_LHU: begin
 					case (addr_w[1:0])
-                        2'b00: data_r <= $unsigned(mem[addr_r >> 2][15:0]);
-                        2'b01: data_r <= $unsigned(mem[addr_r >> 2][23:8]);
-                        2'b10: data_r <= $unsigned(mem[addr_r >> 2][31:16]);
-                        default: ;
+						2'b00: data_r <= $unsigned(mem[addr_r >> 2][15:0]);
+						2'b01: data_r <= $unsigned(mem[addr_r >> 2][23:8]);
+						2'b10: data_r <= $unsigned(mem[addr_r >> 2][31:16]);
+						default: ;
 					endcase
 				end
 				`ALU_LW: begin
