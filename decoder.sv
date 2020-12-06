@@ -1,8 +1,8 @@
 `include "define.vh"
 
 module decoder(
-    input clk,
-    input [31:0] inst,
+    input logic clk,
+    input logic [31:0] inst,
     output logic [4:0] rs1_src,
     output logic [4:0] rs2_src,
     output logic [4:0] rd_src,
@@ -68,6 +68,7 @@ module decoder(
                         3'b100: alucode <= `ALU_XOR;
                         3'b110: alucode <= `ALU_OR; 
                         3'b111: alucode <= `ALU_AND;
+                        default: alucode <= `ALU_NOP;
                     endcase
                  end
             endcase
@@ -85,7 +86,7 @@ module decoder(
             imm <= {inst[31:12], 12'b0};
             alucode <= `ALU_LUI;
             aluop1_type <= `OP_TYPE_NONE;
-            aluop2_type <= `OP_TYPE_IMM; //TODO: ‚Ç‚Á‚¿‚É‚·‚é‚©
+            aluop2_type <= `OP_TYPE_IMM; //TODO: ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½é‚©
             reg_we <= `ENABLE;
             is_load <= `DISABLE;
             is_store <= `DISABLE;
@@ -97,7 +98,7 @@ module decoder(
             rd_src <= inst[11:7];
             imm <= {inst[31:12], 12'b0};
             alucode <= `ALU_ADD;
-            aluop1_type <= `OP_TYPE_IMM; //TODO: ‚Ç‚Á‚¿‚É‚·‚é‚©
+            aluop1_type <= `OP_TYPE_IMM; //TODO: ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½é‚©
             aluop2_type <= `OP_TYPE_PC; 
             reg_we <= `ENABLE;
             is_load <= `DISABLE;
@@ -189,6 +190,7 @@ module decoder(
            is_store <= `DISABLE;
            is_halt <= `DISABLE;
         end
+        default: ;
         
     endcase
     

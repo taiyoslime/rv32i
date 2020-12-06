@@ -1,8 +1,8 @@
 `include "define.vh"
 
 module fetch(
-    input clk,
-    input rst,
+    input logic clk,
+    input logic rst,
     input logic [31:0] pc,
     output logic [31:0] inst
     );
@@ -17,17 +17,13 @@ module fetch(
      );
      */
      
-     logic [31:0] mem [0:'h10000];
+     logic [31:0] mem [0:'h5fff];
 
 	 initial $readmemh(`INST_MEM_FILE, mem);
 	 logic [31:0] pc_r;
 	 assign inst = mem[pc_r[31:2]];
      
-     always @(negedge rst or posedge clk) begin
-        if (rst == '0) begin
-            // TODO
-        end else begin
-            pc_r <= pc;
-        end
+     always @(posedge clk) begin
+        pc_r <= pc;
      end
 endmodule

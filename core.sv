@@ -1,17 +1,21 @@
 `include "define.vh"
 
 module core(
-    input clk,
-    input rst,
+    input logic clk,
+    input logic rst,
     output uart_tx
     );
     
-    logic [5:0] pipeline_clk;
+    logic [4:0] pipeline_clk;
+    //logic pe;
     
     initial begin
-        pipeline_clk <= 5'b10000;
+        pipeline_clk = 5'b10000;
+        //pe = 0;
     end
     
+     logic [31:0] pc;
+    logic [31:0] inst;
     
     always @(posedge clk or negedge rst) begin
         if(!rst) begin
@@ -19,10 +23,11 @@ module core(
         end else begin
             pipeline_clk <= pipeline_clk != 5'b10000 ? (pipeline_clk << 1) : 5'b00001;
         end
+       // if (pc == 'h8004) begin
+       //     pe <= 1;
+       // end
     end
     
-    logic [31:0] pc;
-    logic [31:0] inst;
     
     fetch fetch(
         .clk(pipeline_clk[0]),
@@ -37,8 +42,9 @@ module core(
     logic [4:0] rs1_src;
     logic [4:0] rs2_src;
     logic [4:0] rd_src;
+  
 
-    regfile regrile(
+    regfile regfile(
         .*
     );
     
@@ -71,7 +77,7 @@ module core(
     assign addr_w = alu_result;
     assign addr_r = alu_result;
     
-    data_mem data_memt(
+    data_mem data_mem(
         .clk(pipeline_clk[3]),
         .*
     );
@@ -90,19 +96,20 @@ module core(
         .uart_wr_i(uart_we),
         .uart_dat_i(uart_IN_data),
         .sys_clk_i(clk),
-        .sys_rstn_i(rst_n)
+        .sys_rstn_i(rst)
     );
     
-    assign uart_IN_data = data_w[7:0];  // ƒXƒgƒA‚·‚éƒf[ƒ^‚ðƒ‚ƒWƒ…[ƒ‹‚Ö“ü—Í
-    assign uart_we = ((addr_w == `UART_ADDR) && (is_store == `ENABLE)) ? 1'b1 : 1'b0;  // ƒVƒŠƒAƒ‹’ÊM—pƒAƒhƒŒƒX‚Ö‚ÌƒXƒgƒA–½—ßŽÀsŽž‚É‘—MŠJŽnM†‚ðƒAƒT[ƒg
-    assign uart_tx = uart_OUT_data;  // ƒVƒŠƒAƒ‹’ÊMƒ‚ƒWƒ…[ƒ‹‚Ìo—Í‚ÍFPGAŠO•”‚Ö‚Æo—Í
+    assign uart_IN_data = data_w[7:0];  // ï¿½Xï¿½gï¿½Aï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Ö“ï¿½ï¿½ï¿½
+    assign uart_we = ((addr_w == `UART_ADDR) && (is_store == `ENABLE)) ? 1'b1 : 1'b0;  // ï¿½Vï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ÊMï¿½pï¿½Aï¿½hï¿½ï¿½ï¿½Xï¿½Ö‚ÌƒXï¿½gï¿½Aï¿½ï¿½ï¿½ßŽï¿½ï¿½sï¿½ï¿½ï¿½É‘ï¿½ï¿½Mï¿½Jï¿½nï¿½Mï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Tï¿½[ï¿½g
+    assign uart_tx = uart_OUT_data;  // ï¿½Vï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ÊMï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Ìoï¿½Í‚ï¿½FPGAï¿½Oï¿½ï¿½ï¿½Ö‚Æoï¿½ï¿½
 
     
     wire [31:0] hc_OUT_data;
 
     hardware_counter hardware_counter0(
+       //.CLK_IP(pipeline_clk == 5'b00001 ),
         .CLK_IP(clk),
-        .RSTN_IP(rst_n),
+        .RSTN_IP(rst),
         .COUNTER_OP(hc_OUT_data)
     );
     

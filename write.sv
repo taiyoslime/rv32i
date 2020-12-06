@@ -1,8 +1,8 @@
 `include "define.vh"
 
 module write(
-	input clk,
-	input rst,
+	input logic clk,
+	input logic rst,
 	input logic [31:0] pc_next,
 	output logic [31:0] pc
     );

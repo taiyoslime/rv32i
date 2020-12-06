@@ -1,5 +1,12 @@
-`define INST_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/Coremark/code.hex"
-`define DATA_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/Coremark/data.hex"
+`define INST_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
+`define DATA_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/data.hex"
+
+//`define INST_MEM_FILE "/home/denjo/ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—/b3exp/benchmarks/Coremark/code.hex"
+//`define DATA_MEM_FILE "/home/denjo/ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—/b3exp/benchmarks/Coremark/data.hex"
+
+//`define INST_MEM_FILE "/home/denjo/ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—/b3exp/benchmarks/tests/Uart/code.hex"
+//`define DATA_MEM_FILE ""
+
 
 `define ENABLE 1'b1
 `define DISABLE 1'b0
@@ -15,7 +22,7 @@
 `define OP_STORE    7'b0100011
 `define OP_LOAD 7'b0000011
 
-// ALUƒR[ƒh
+// ALUï¿½Rï¿½[ï¿½h
 `define ALU_LUI   6'd0
 `define ALU_JAL   6'd1
 `define ALU_JALR  6'd2
@@ -51,7 +58,7 @@
 `define OP_TYPE_IMM  2'd2
 `define OP_TYPE_PC   2'd3
 
-// ƒpƒCƒvƒ‰ƒCƒ“ƒXƒe[ƒW
+// ï¿½pï¿½Cï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Xï¿½eï¿½[ï¿½W
 `define IF_STAGE 3'd0
 `define RR_STAGE 3'd1
 `define EX_STAGE 3'd2

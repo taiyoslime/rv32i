@@ -12,7 +12,7 @@ module inst_mem(
 	initial $readmemh(`INST_MEM_FILE, mem);
 
 	always @(posedge clk) begin
-		addr_reg <= addr;
+		addr_reg = addr;
 	end
 	assign data = mem[addr_reg]; //TODO
 
