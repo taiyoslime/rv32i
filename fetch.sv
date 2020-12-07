@@ -2,7 +2,6 @@
 
 module fetch(
 	input logic clk,
-	input logic rst,
 	input logic [31:0] pc,
 	output logic [31:0] inst
 	);
@@ -24,6 +23,6 @@ module fetch(
 	 assign inst = mem[pc_r[31:2]];
 
 	 always_ff @(posedge clk) begin
-		pc_r <= pc;
+	   pc_r <= pc;
 	 end
 endmodule

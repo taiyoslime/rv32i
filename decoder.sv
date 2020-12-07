@@ -86,7 +86,7 @@ module decoder(
 				imm <= {inst[31:12], 12'b0};
 				alucode <= `ALU_LUI;
 				aluop1_type <= `OP_TYPE_NONE;
-				aluop2_type <= `OP_TYPE_IMM; //TODO: �ǂ����ɂ��邩
+				aluop2_type <= `OP_TYPE_IMM; 
 				reg_we <= `ENABLE;
 				is_load <= `DISABLE;
 				is_store <= `DISABLE;
@@ -98,7 +98,7 @@ module decoder(
 				rd_src <= inst[11:7];
 				imm <= {inst[31:12], 12'b0};
 				alucode <= `ALU_ADD;
-				aluop1_type <= `OP_TYPE_IMM; //TODO: �ǂ����ɂ��邩
+				aluop1_type <= `OP_TYPE_IMM; 
 				aluop2_type <= `OP_TYPE_PC;
 				reg_we <= `ENABLE;
 				is_load <= `DISABLE;

@@ -22,8 +22,8 @@ module regfile(
 		register[5'b0] = 32'b0;
 	end
 
-	always_ff @(posedge clk) begin
-		if (reg_we == `ENABLE && rd_src != 5'b0) begin
+	always_ff @( posedge clk) begin
+	    if (reg_we == `ENABLE && rd_src != 5'b0) begin
 			register[rd_src] <= rd;
 		end
 	end
