@@ -59,7 +59,7 @@
 `define OP_TYPE_IMM  2'd2
 `define OP_TYPE_PC   2'd3
 
-
 `define HARDWARE_COUNTER_ADDR 32'hffffff00
-
 `define UART_ADDR 32'hf6fff070
+
+typedef enum logic[3:0] {PIPELINE_INIT, PIPELINE_RUN, PIPELINE_PAUSE, PIPELINE_WARMUP_1, PIPELINE_WARMUP_2, PIPELINE_WARMUP_3} pipeline_t;

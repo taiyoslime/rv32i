@@ -10,8 +10,10 @@ module execute(
 	input logic [31:0] rs1,
 	input logic [31:0] rs2,
 	input logic [31:0] imm,
+	input logic exec_pipeline_ctl_in,
 	output logic [31:0] pc_next,
-	output logic [31:0] alu_result
+	output logic [31:0] alu_result,
+	output logic exec_pipeline_ctl_out
 	);
 
 	logic [31:0] op1;
@@ -46,12 +48,15 @@ module execute(
 	end
 
 	always_ff @(posedge clk) begin
-		alu_result <= alu_result_rg;
-		if (br_taken == `ENABLE) begin
-			pc_next <= alucode != `ALU_JALR ? pc + imm : rs1 + imm;
-		end else begin
-			pc_next <= pc + 32'b100;
+		if (exec_pipeline_ctl_in) begin
+			alu_result <= alu_result_rg;
+			if (br_taken == `ENABLE) begin
+				pc_next <= alucode != `ALU_JALR ? pc + imm : rs1 + imm;
+			end else begin
+				pc_next <= pc + 32'b100;
+			end
 		end
+		exec_pipeline_ctl_out <= 1;
 	end
 
 endmodule

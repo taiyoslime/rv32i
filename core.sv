@@ -6,28 +6,8 @@ module core(
 	output uart_tx
 	);
 
-	logic [4:0] pipeline_clk;
-
-	initial begin
-		pipeline_clk = 5'b10000;
-	end
-
 	logic [31:0] pc;
 	logic [31:0] inst;
-
-	always @(posedge clk or negedge rst) begin
-		if(!rst) begin
-			pipeline_clk <= 5'b10000;
-		end else begin
-			pipeline_clk <= pipeline_clk != 5'b10000 ? (pipeline_clk << 1) : 5'b00001;
-		end
-	end
-
-
-	fetch fetch(
-		.clk(pipeline_clk[0]),
-		.*
-	);
 
 	logic reg_we;
 
@@ -38,11 +18,6 @@ module core(
 	logic [4:0] rs2_src;
 	logic [4:0] rd_src;
 
-
-	regfile regfile(
-		.*
-	);
-
 	logic [31:0] imm;
 	logic [5:0] alucode;
 	logic [1:0] aluop1_type;
@@ -50,41 +25,94 @@ module core(
 	logic is_load;
 	logic is_store;
 	logic is_halt;
-
-	decoder decoder(
-		.clk(pipeline_clk[1]),
-		.*
-	);
-
-
 	logic [31:0] pc_next;
 	logic [31:0] alu_result;
 
-	execute execute(
-		.clk(pipeline_clk[2]),
-		.*
-	);
-
 	logic [31:0] data_r;
 	logic [31:0] data_w;
-	assign data_w = rs2;
 	logic [31:0] addr_w, addr_r;
-	assign addr_w = alu_result;
-	assign addr_r = alu_result;
-
-	data_mem data_mem(
-		.clk(pipeline_clk[3]),
-		.*
-	);
-
-	write write(
-		.clk(pipeline_clk[4]),
-		.*
-	);
 
 	wire [7:0] uart_IN_data;
 	wire uart_we;
 	wire uart_OUT_data;
+
+	wire [31:0] hc_OUT_data;
+
+	pipeline_t pipeline_status, pipeline_status_saved;
+
+	logic fetch_pipeline_ctl_in, decode_pipeline_ctl_in, exec_pipeline_ctl_in, write_pipeline_ctl_in;
+	logic fetch_pipeline_ctl_out, decode_pipeline_ctl_out, exec_pipeline_ctl_out, write_pipeline_ctl_out;
+
+	assign fetch_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_1 || pipeline_status == PIPELINE_WARMUP_2 || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
+	assign decode_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_2 || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
+	assign exec_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
+	assign write_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN) ? 'b1 : 'b0;
+
+
+	always @(posedge clk or negedge rst) begin
+		if(!rst) begin
+			pipeline_status <= PIPELINE_INIT;
+			pipeline_status_prev <= PIPELINE_INIT;
+			pipeline_status_saved <= PIPELINE_INIT;
+		end
+		if (!fetch_pipeline_ctl_out || !decode_pipeline_ctl_out || !exec_pipeline_ctl_out || !write_pipeline_ctl_out) begin
+			pipeline_status <= PIPELINE_PAUSE;
+			if (pipeline_status != PIPELINE_PAUSE) begin
+				pipeline_status_saved <= pipeline_status;
+			end
+		end else begin
+			if (pipeline_status == PIPELINE_PAUSE) begin
+				pipeline_status <= pipeline_status_saved
+			end
+			else if(pipeline_status == PIPELINE_INIT) begin
+				pipeline_status <= PIPELINE_WARMUP_1;
+			end
+			else if(pipeline_status == PIPELINE_WARMUP_1) begin
+				pipeline_status <= PIPELINE_WARMUP_2;
+			end
+			else if(pipeline_status == PIPELINE_WARMUP_2) begin
+				pipeline_status <= PIPELINE_WARMUP_3;
+			end
+			else if(pipeline_status == PIPELINE_WARMUP_3) begin
+				pipeline_status <= PIPELINE_RUN;
+			end
+			else begin
+				pipeline_status <= PIPELINE_RUN;
+			end
+		end
+	end
+
+
+	fetch fetch0(
+		.*
+	);
+
+	regfile regfile0(
+		.*
+	);
+
+
+	decoder decoder0(
+		.*
+	);
+
+	execute execute0(
+		.*
+	);
+
+
+	data_mem data_mem0(
+		.*
+	);
+
+	write write0(
+		.*
+	);
+
+	assign data_w = rs2;
+	assign addr_w = alu_result;
+	assign addr_r = alu_result;
+
 
 	uart uart0(
 		.uart_tx(uart_OUT_data),
@@ -97,9 +125,6 @@ module core(
 	assign uart_IN_data = data_w[7:0];
 	assign uart_we = ((addr_w == `UART_ADDR) && (is_store == `ENABLE)) ? 1'b1 : 1'b0;
 	assign uart_tx = uart_OUT_data;
-
-
-	wire [31:0] hc_OUT_data;
 
 	hardware_counter hardware_counter0(
 		.CLK_IP(clk),
