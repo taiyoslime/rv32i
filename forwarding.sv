@@ -26,5 +26,4 @@ module forwarding(
 		fwd_rs2_src_rg <= fwd_rs2_src;
 	end
 
-
 endmodule

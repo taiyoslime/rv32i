@@ -2,6 +2,7 @@
 
 module decoder(
 	input logic clk,
+	input logic rst,
 	input logic [31:0] inst,
 	input logic decode_pipeline_ctl_in,
 	output logic [4:0] rs1_src,
@@ -18,7 +19,10 @@ module decoder(
 	output logic decode_pipeline_ctl_out
 	);
 
-	always_ff @(posedge clk) begin
+	always_ff @(negedge rst or posedge clk) begin
+		if (!rst) begin
+			decode_pipeline_ctl_out <= 0;
+		end
 		if (decode_pipeline_ctl_in) begin
 			case(inst[6:0])
 				`OP_OP: begin
@@ -164,13 +168,13 @@ module decoder(
 						3'b001: alucode <= `ALU_SH;
 						3'b010: alucode <= `ALU_SW;
 						default: alucode <= `ALU_NOP;
-				   endcase
-				   aluop1_type <= `OP_TYPE_REG;
-				   aluop2_type <= `OP_TYPE_IMM;
-				   reg_we <= `DISABLE;
-				   is_load <= `DISABLE;
-				   is_store <= `ENABLE;
-				   is_halt <= `DISABLE;
+					endcase
+					aluop1_type <= `OP_TYPE_REG;
+					aluop2_type <= `OP_TYPE_IMM;
+					reg_we <= `DISABLE;
+					is_load <= `DISABLE;
+					is_store <= `ENABLE;
+					is_halt <= `DISABLE;
 				 end
 				`OP_LOAD: begin
 					rs1_src <= inst[19:15];
@@ -185,17 +189,20 @@ module decoder(
 						3'b101: alucode <= `ALU_LHU;
 						default: alucode <= `ALU_NOP;
 					endcase
-				   aluop1_type <= `OP_TYPE_REG;
-				   aluop2_type <= `OP_TYPE_IMM;
-				   reg_we <= `ENABLE;
-				   is_load <= `ENABLE;
-				   is_store <= `DISABLE;
-				   is_halt <= `DISABLE;
+					aluop1_type <= `OP_TYPE_REG;
+					aluop2_type <= `OP_TYPE_IMM;
+					reg_we <= `ENABLE;
+					is_load <= `ENABLE;
+					is_store <= `DISABLE;
+					is_halt <= `DISABLE;
+					decode_pipeline_ctl_out <= 1;
 				end
 				default: ;
 
 			endcase
-			pipeline_ctl <= 1;
+		end
+		if (decode_pipeline_ctl_out) begin
+			decode_pipeline_ctl_out <= 0;
 		end
 	end
 endmodule

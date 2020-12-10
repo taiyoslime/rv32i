@@ -5,10 +5,13 @@ module write(
 	input logic rst,
 	input logic [31:0] pc_next,
 	input logic write_pipeline_ctl_in,
-	output logic [31:0] pc
+	output logic [31:0] pc,
 	output logic write_pipeline_ctl_out
 	);
 	always_ff @(negedge rst or posedge clk) begin
+		if (!rst) begin
+			 write_pipeline_ctl_out <= 0;
+		end
 		if (write_pipeline_ctl_in) begin
 			if (rst == '0) begin
 				pc <= 'h08000;

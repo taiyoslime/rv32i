@@ -16,7 +16,7 @@ module core(
 	logic [31:0] rd;
 	logic [4:0] rs1_src;
 	logic [4:0] rs2_src;
-	logic [4:0] rd_src;
+	logic [4:0] rd_src, rd_src_de;
 
 	logic [31:0] imm;
 	logic [5:0] alucode;
@@ -27,6 +27,14 @@ module core(
 	logic is_halt;
 	logic [31:0] pc_next;
 	logic [31:0] alu_result;
+
+	logic [4:0] fwd_rd_src; //from exec
+	logic [31:0] fwd_rd;  //from exec
+	logic [4:0] fwd_rs1_src; //from decode
+	logic [4:0] fwd_rs2_src; //from decode
+	logic is_fwd_rs1;
+	logic is_fwd_rs2;
+	logic [31:0] fwd_val;
 
 	logic [31:0] data_r;
 	logic [31:0] data_w;
@@ -45,24 +53,22 @@ module core(
 
 	assign fetch_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_1 || pipeline_status == PIPELINE_WARMUP_2 || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
 	assign decode_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_2 || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
-	assign exec_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
-	assign write_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN) ? 'b1 : 'b0;
+	assign exec_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_3 || pipeline_status == PIPELINE_STALL_LOAD) ? 'b1 : 'b0;
+	assign write_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_STALL_LOAD) ? 'b1 : 'b0;
 
 
 	always @(posedge clk or negedge rst) begin
 		if(!rst) begin
 			pipeline_status <= PIPELINE_INIT;
-			pipeline_status_prev <= PIPELINE_INIT;
 			pipeline_status_saved <= PIPELINE_INIT;
 		end
-		if (!fetch_pipeline_ctl_out || !decode_pipeline_ctl_out || !exec_pipeline_ctl_out || !write_pipeline_ctl_out) begin
-			pipeline_status <= PIPELINE_PAUSE;
-			if (pipeline_status != PIPELINE_PAUSE) begin
-				pipeline_status_saved <= pipeline_status;
-			end
+		if (exec_pipeline_ctl_out) begin
+			pipeline_status <= PIPELINE_INIT; // stall due to jump
+		end else if (decode_pipeline_ctl_out) begin
+			pipeline_status <= PIPELINE_STALL_LOAD; // stall due to load
 		end else begin
 			if (pipeline_status == PIPELINE_PAUSE) begin
-				pipeline_status <= pipeline_status_saved
+				pipeline_status <= pipeline_status_saved;
 			end
 			else if(pipeline_status == PIPELINE_INIT) begin
 				pipeline_status <= PIPELINE_WARMUP_1;
@@ -74,6 +80,9 @@ module core(
 				pipeline_status <= PIPELINE_WARMUP_3;
 			end
 			else if(pipeline_status == PIPELINE_WARMUP_3) begin
+				pipeline_status <= PIPELINE_RUN;
+			end
+			else if(pipeline_status == PIPELINE_STALL_LOAD) begin
 				pipeline_status <= PIPELINE_RUN;
 			end
 			else begin
@@ -93,6 +102,7 @@ module core(
 
 
 	decoder decoder0(
+		.rd_src(rd_src_de),
 		.*
 	);
 
@@ -100,6 +110,13 @@ module core(
 		.*
 	);
 
+	forwarding forwarding0(
+		.fwd_rd_src(rd_src),
+		.fwd_rd(rd),
+		.fwd_rs1_src(rs1_src),
+		.fwd_rs2_src(rs1_src),
+		.*
+	);
 
 	data_mem data_mem0(
 		.*
