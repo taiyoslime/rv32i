@@ -15,15 +15,15 @@ module forwarding(
 	logic [4:0] fwd_rd_src_rg, fwd_rs1_src_rg, fwd_rs2_src_rg;
 	logic [31:0] fwd_rd_rg;
 
-	assign fwd_val = fwd_rd_rg;
-	assign is_fwd_rs1 = fwd_rd_src == fwd_rs1_src ? 'b1 : 'b0;
-	assign is_fwd_rs2 = fwd_rd_src == fwd_rs2_src ? 'b1 : 'b0;
+	assign fwd_val = fwd_rd;
+	assign is_fwd_rs1 = (fwd_rd_src == fwd_rs1_src && fwd_rs1_src != '0 ) ? 'b1 : 'b0;
+	assign is_fwd_rs2 = (fwd_rd_src == fwd_rs2_src && fwd_rs1_src != '0) ? 'b1 : 'b0;
 
-	always_ff @(posedge clk) begin
-		fwd_rd_src_rg <= fwd_rd_src;
-		fwd_rd_rg <= fwd_rd;
-		fwd_rs1_src_rg <= fwd_rs1_src;
-		fwd_rs2_src_rg <= fwd_rs2_src;
-	end
+	//always_ff @(posedge clk) begin
+		//fwd_rd_src_rg <= fwd_rd_src;
+		//fwd_rd_rg <= fwd_rd;
+		//fwd_rs1_src_rg <= fwd_rs1_src;
+		//fwd_rs2_src_rg <= fwd_rs2_src;
+	//end
 
 endmodule

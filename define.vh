@@ -1,10 +1,12 @@
-`define INST_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
-`define DATA_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/data.hex"
+`define INST_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/tests/LoadAndStore/code.hex"
+`define DATA_MEM_FILE ""
+//`define INST_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
+//`define DATA_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/data.hex"
 //`define INST_MEM_FILE "/Users/taiyoslime/Vagrant/ubuntu-20.04/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
 //`define DATA_MEM_FILE "/Users/taiyoslime/Vagrant/ubuntu-20.04/b3exp/benchmarks/Coremark_for_Synthesis/data.hex"
-//`define INST_MEM_FILE "/home/denjo/デスクトップ/b3exp/benchmarks/Coremark/code.hex"
-//`define DATA_MEM_FILE "/home/denjo/デスクトップ/b3exp/benchmarks/Coremark/data.hex"
-//`define INST_MEM_FILE "/home/denjo/デスクトップ/b3exp/benchmarks/tests/Uart/code.hex"
+//`define INST_MEM_FILE "/home/denjo/�?スクトッ�?/b3exp/benchmarks/Coremark/code.hex"
+//`define DATA_MEM_FILE "/home/denjo/�?スクトッ�?/b3exp/benchmarks/Coremark/data.hex"
+//`define INST_MEM_FILE "/home/denjo/�?スクトッ�?/b3exp/benchmarks/tests/Uart/code.hex"
 //`define DATA_MEM_FILE ""
 
 
@@ -62,10 +64,5 @@
 `define HARDWARE_COUNTER_ADDR 32'hffffff00
 `define UART_ADDR 32'hf6fff070
 
-
-`ifndef TYPEDEF_H
-`define TYPEDEF_H
-typedef enum logic[3:0] {PIPELINE_INIT, PIPELINE_RUN, PIPELINE_PAUSE, PIPELINE_WARMUP_1, PIPELINE_WARMUP_2, PIPELINE_WARMUP_3, PIPELINE_STALL_LOAD} pipeline_t;
-`endif
 
 

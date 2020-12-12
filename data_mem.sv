@@ -1,11 +1,11 @@
 `include "define.vh"
 
 module data_mem(
-	input logic clk,
-	input logic [5:0] alucode,
-	input logic is_load,
-	input logic is_store,
-	input logic [31:0] addr_w, addr_r,
+	input clk,
+	input [5:0] alucode,
+	input is_load,
+	input is_store,
+	input [31:0] addr_w, addr_r,
 	input [31:0] data_w,
 	input logic write_pipeline_ctl_in,
 	output logic [31:0] data_r,
@@ -88,7 +88,6 @@ module data_mem(
 					default: ;
 				endcase
 			end
-			write_pipeline_ctl_out <= 1;
 		end
 
 	end
