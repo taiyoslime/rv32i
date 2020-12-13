@@ -55,10 +55,10 @@ module core(
 	logic fetch_pipeline_ctl_in, decode_pipeline_ctl_in, exec_pipeline_ctl_in, write_pipeline_ctl_in;
 	logic fetch_pipeline_ctl_out, decode_pipeline_ctl_out, exec_pipeline_ctl_out, write_pipeline_ctl_out;
 
-	assign fetch_pipeline_ctl_in = decode_pipeline_ctl_out ? 0 : (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_1 || pipeline_status == PIPELINE_WARMUP_2 || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
-	assign decode_pipeline_ctl_in = decode_pipeline_ctl_out ? 0 : (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_2 || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
-	assign exec_pipeline_ctl_in = decode_pipeline_ctl_out ? 1 : (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_3 /*|| pipeline_status == PIPELINE_STALL_LOAD*/) ? 'b1 : 'b0;
-	assign write_pipeline_ctl_in =  decode_pipeline_ctl_out ? 1 :(pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_STALL_LOAD || pipeline_status == PIPELINE_STALL_LOAD_2  /*|| pipeline_status == PIPELINE_STALL_EXEC*/) ? 'b1 : 'b0;
+	assign fetch_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_1 || pipeline_status == PIPELINE_WARMUP_2 || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
+	assign decode_pipeline_ctl_in =  (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_2 || pipeline_status == PIPELINE_WARMUP_3 ) ? 'b1 : 'b0;
+	assign exec_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_WARMUP_3 /*|| pipeline_status == PIPELINE_STALL_LOAD*/) ? 'b1 : 'b0;
+	assign write_pipeline_ctl_in = (pipeline_status == PIPELINE_RUN || pipeline_status == PIPELINE_STALL_LOAD || pipeline_status == PIPELINE_STALL_LOAD_2  /*|| pipeline_status == PIPELINE_STALL_EXEC*/) ? 'b1 : 'b0;
 
 
 	always @(posedge clk or negedge rst) begin
@@ -109,7 +109,7 @@ module core(
 		end else begin
 			if (br_taken == `ENABLE) begin
 				pc <= pc_next;
-			end else if (decode_pipeline_ctl_out || pipeline_status == PIPELINE_STALL_LOAD || pipeline_status == PIPELINE_STALL_LOAD_2) begin
+			end else if (pipeline_status == PIPELINE_STALL_LOAD || pipeline_status == PIPELINE_STALL_LOAD_2) begin
 				pc <= pc;
 			end else begin
 				pc <= pc + 'h4;
@@ -134,6 +134,7 @@ module core(
 	logic reg_we_de;
 	logic [5:0] alucode_de;
 
+
 	decoder decoder0(
 		.pc(pc_fd),
 		.rd_src(rd_src_de),
@@ -144,6 +145,7 @@ module core(
 		.alucode(alucode_de),
 		.*
 	);
+
 	
 	logic is_load_ew, is_store_ew, reg_we_ew;
 	logic [31:0] rs2_ew, alu_result_e, alu_result_ew, alu_result_ef, pc_next_ew;
@@ -156,6 +158,13 @@ module core(
 	logic [31:0] alu_result_rg;
 	
 	logic [4:0] rd_src_e_out;
+	
+	logic is_load_ef, is_store_ef;
+	
+		
+	assign is_load_ef = is_load_ew;
+	assign is_store_ef = is_store_ew;
+	
 	assign rd_src_ew = rd_src_e_out;
 	assign rd_src_ef = rd_src_e_out;
 
@@ -185,6 +194,8 @@ module core(
 		.fwd_rd(alu_result_ef),
 		.fwd_rs1_src(rs1_src),
 		.fwd_rs2_src(rs2_src),
+		.is_load(is_load_ef),
+		.is_store(is_store_ef),
 		.*
 	);
 	

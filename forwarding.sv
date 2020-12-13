@@ -7,6 +7,8 @@ module forwarding(
 	input logic [31:0] fwd_rd,  //from exec
 	input logic [4:0] fwd_rs1_src, //from decode
 	input logic [4:0] fwd_rs2_src, //from decode
+	input logic is_store,
+	input logic is_load,
 	output logic is_fwd_rs1,
 	output logic is_fwd_rs2,
 	output logic [31:0] fwd_val
@@ -16,8 +18,8 @@ module forwarding(
 	logic [31:0] fwd_rd_rg;
 
 	assign fwd_val = fwd_rd;
-	assign is_fwd_rs1 = (fwd_rd_src == fwd_rs1_src && fwd_rs1_src != '0 ) ? 'b1 : 'b0;
-	assign is_fwd_rs2 = (fwd_rd_src == fwd_rs2_src && fwd_rs1_src != '0) ? 'b1 : 'b0;
+	assign is_fwd_rs1 = (fwd_rd_src == fwd_rs1_src && fwd_rs1_src != '0 && !is_load && !is_store) ? 'b1 : 'b0;
+	assign is_fwd_rs2 = (fwd_rd_src == fwd_rs2_src && fwd_rs1_src != '0 && !is_load && !is_store) ? 'b1 : 'b0;
 
 	//always_ff @(posedge clk) begin
 		//fwd_rd_src_rg <= fwd_rd_src;

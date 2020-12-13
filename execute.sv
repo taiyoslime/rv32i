@@ -53,14 +53,18 @@ module execute(
 
 
 	always_latch begin
+	   		    if (pc == 'h80b8) begin
+		      $display(is_fwd_rs2, is_load, is_store, fwd_val, rs2);
+		    end
 		case(aluop1_type)
-			`OP_TYPE_REG: op1 = is_fwd_rs1 && !is_load && !is_store ? fwd_val : rs1;
+
+			`OP_TYPE_REG: op1 = (is_fwd_rs1 && !is_load && !is_store) ? fwd_val : rs1;
 			`OP_TYPE_IMM: op1 = imm;
 			`OP_TYPE_PC: op1 = pc;
 			default: ;
 		endcase
 		case(aluop2_type)
-			`OP_TYPE_REG: op2 = is_fwd_rs2 && !is_load && !is_store ? fwd_val :rs2;
+			`OP_TYPE_REG: op2 = (is_fwd_rs2 && !is_load && !is_store) ? fwd_val :rs2;
 			`OP_TYPE_IMM: op2 = imm;
 			`OP_TYPE_PC: op2 = pc;
 			default: ;

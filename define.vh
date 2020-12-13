@@ -1,5 +1,5 @@
-`define INST_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/tests/LoadAndStore/code.hex"
-`define DATA_MEM_FILE ""
+`define INST_MEM_FILE "C:/Users/taiyo/Dropbox/b3exp/benchmarks/tests/IntRegReg/code.hex" /*"C:/Users/taiyo/Dropbox/b3exp/benchmarks/Coremark/code.hex"*/
+`define DATA_MEM_FILE "" /*"C:/Users/taiyo/Dropbox/b3exp/benchmarks/Coremark/data.hex"*/
 //`define INST_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
 //`define DATA_MEM_FILE "/home/denjo/b3exp/benchmarks/Coremark_for_Synthesis/data.hex"
 //`define INST_MEM_FILE "/Users/taiyoslime/Vagrant/ubuntu-20.04/b3exp/benchmarks/Coremark_for_Synthesis/code.hex"
