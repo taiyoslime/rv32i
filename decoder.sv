@@ -35,6 +35,14 @@ module decoder(
 					10'b0000000001: alucode <= `ALU_SLL;
 					10'b0000000101: alucode <= `ALU_SRL;
 					10'b0100000101: alucode <= `ALU_SRA;
+					10'b0000001000: alucode <= `ALU_MUL;
+					10'b0000001001: alucode <= `ALU_MULH;
+					10'b0000001010: alucode <= `ALU_MULSU;
+					10'b0000001011: alucode <= `ALU_MULU;
+					10'b0000001100: alucode <= `ALU_DIV;
+					10'b0000001101: alucode <= `ALU_DIVU;
+					10'b0000001110: alucode <= `ALU_REM;
+					10'b0000001111: alucode <= `ALU_REMU;
 					default: alucode <= `ALU_NOP;
 				endcase
 				aluop1_type <= `OP_TYPE_REG;

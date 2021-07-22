@@ -8,6 +8,23 @@ module alu(
 	output logic br_taken
 	);
 
+	logic [31:0] multipiler_result;
+	logic [31:0] divider_result;
+
+	multipiler multipiler(
+		.alucode,
+		.op1,
+		.op2,
+		.multipiler_result
+	);
+
+	divider divider(
+		.alucode,
+		.op1,
+		.op2,
+		.divider_result
+	);
+
 	always_latch begin
 		case (alucode)
 		`ALU_ADD, `ALU_LB, `ALU_LH, `ALU_LW, `ALU_LBU, `ALU_LHU, `ALU_SB, `ALU_SH, `ALU_SW: begin
@@ -76,6 +93,17 @@ module alu(
 				default: ;
 			endcase
 		end
+	
+		`ALU_MUL, `ALU_MULH, `ALU_MULSU, `ALU_MULU: begin
+			alu_result = multipiler_result;
+			br_taken = `DISABLE;
+		end
+
+		`ALU_DIV, `ALU_DIVU, `ALU_REM, `ALU_REMU: begin
+			alu_result = divider_result;
+			br_taken = `DISABLE;
+		end
+
 		default: ;
 		endcase
 	end
